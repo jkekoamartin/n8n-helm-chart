@@ -61,6 +61,7 @@ spec:
           {{- end }}
           securityContext:
             {{- toYaml .Values.main.securityContext | nindent 12 }}
+
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           envFrom:
@@ -77,6 +78,8 @@ spec:
             - name: {{ $key }}
               {{- toYaml $value | nindent 14 }}
             {{- end }}
+            - name: N8N_SECURE_COOKIE
+              value: 'false'
           lifecycle:
             {{- toYaml .Values.main.lifecycle | nindent 12 }}
           ports:
