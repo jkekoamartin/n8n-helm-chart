@@ -33,17 +33,25 @@ hostAliases: []
 # Ingress
 #
 ingress:
-  enabled: false
-  annotations: {}
-  # define a custom ingress class Name, like "traefik" or "nginx"
-  className: ""
+  enabled: true
+  ingressClassName: public
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
   hosts:
-    - host: workflow.example.com
-      paths: []
+    - host: n8n.meshnet
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: n8n.home
+      paths:
+        - path: /
+          pathType: Prefix
   tls:
     - hosts:
-        - workflow.example.com
-      secretName: host-domain-cert
+        - n8n.meshnet
+        - n8n.home
+      secretName: n8n-tls
 
 # the main (n8n) application related configuration + Kubernetes specific settings
 # The config: {} dictionary is converted to environmental variables in the ConfigMap.
