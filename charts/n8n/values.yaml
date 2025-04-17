@@ -17,7 +17,7 @@ image:
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
-imagePullSecrets: []
+imagePullSecrets: [ ]
 
 # The Name to use for the chart. Will be the prefix of all resources aka. The Chart.Name (default is 'n8n')
 nameOverride:
@@ -25,10 +25,10 @@ nameOverride:
 fullnameOverride:
 
 # Add entries to a pod's /etc/hosts file, mapping custom IP addresses to hostnames.
-hostAliases: []
+hostAliases: [ ]
   # - ip: 8.8.8.8
   #   hostnames:
-  #     - service-example.local
+#     - service-example.local
 #
 # Ingress
 #
@@ -36,8 +36,9 @@ ingress:
   enabled: true
   ingressClassName: public
   annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+    cert-manager.io/cluster-issuer: "selfsigned-cluster-issuer"
   hosts:
     - host: n8n.meshnet
       paths:
@@ -57,7 +58,7 @@ ingress:
 # The config: {} dictionary is converted to environmental variables in the ConfigMap.
 main:
   # See https://docs.n8n.io/hosting/configuration/environment-variables/ for all values.
-  config: {}
+  config: { }
   #    n8n:
   #    db:
   #      type: postgresdb
@@ -67,7 +68,7 @@ main:
   # Dictionary for secrets, unlike config:, the values here will end up in the secret file.
   # The YAML entry db.postgresdb.password: my_secret is transformed DB_POSTGRESDB_password=bXlfc2VjcmV0
   # See https://docs.n8n.io/hosting/configuration/environment-variables/
-  secret: {}
+  secret: { }
   #    n8n:
   #     if you run n8n stateless, you should provide an encryption key here.
   #      encryption_key:
@@ -116,7 +117,7 @@ main:
     # Use an existing PVC
     # existingClaim:
 
-  extraVolumes: []
+  extraVolumes: [ ]
   #    - name: db-ca-cert
   #      secret:
   #        secretName: db-ca
@@ -124,7 +125,7 @@ main:
   #          - key: ca.crt
   #            path: ca.crt
 
-  extraVolumeMounts: []
+  extraVolumeMounts: [ ]
   #    - name: db-ca-cert
   #      mountPath: /etc/ssl/certs/postgresql
   #      readOnly: true
@@ -149,19 +150,19 @@ main:
     # Specifies whether a service account should be created
     create: true
     # Annotations to add to the service account
-    annotations: {}
+    annotations: { }
     # The name of the service account to use.
     # If not set and create is true, a name is generated using the fullname template
     name: ""
 
   # Annotations to be implemented on the main service deployment
-  deploymentAnnotations: {}
+  deploymentAnnotations: { }
   # Labels to be implemented on the main service deployment
-  deploymentLabels: {}
+  deploymentLabels: { }
   # Annotations to be implemented on the main service pod
-  podAnnotations: {}
+  podAnnotations: { }
   # Labels to be implemented on the main service pod
-  podLabels: {}
+  podLabels: { }
 
   podSecurityContext:
     runAsNonRoot: true
@@ -169,7 +170,7 @@ main:
     runAsGroup: 1000
     fsGroup: 1000
 
-  securityContext: {}
+  securityContext: { }
   # capabilities:
   #   drop:
   #   - ALL
@@ -180,7 +181,7 @@ main:
   # here you can specify lifecycle hooks - it can be used e.g., to easily add packages to the container without building
   # your own docker image
   # see https://github.com/8gears/n8n-helm-chart/pull/30
-  lifecycle: {}
+  lifecycle: { }
 
   #  here's the sample configuration to add mysql-client to the container
   # lifecycle:
@@ -190,7 +191,7 @@ main:
 
   # here you can override a command for main container
   # it may be used to override a starting script (e.g., to resolve issues like https://github.com/n8n-io/n8n/issues/6412) or run additional preparation steps (e.g., installing additional software)
-  command: []
+  command: [ ]
 
   # sample configuration that overrides starting script and solves above issue (also it runs n8n as root, so be careful):
   # command:
@@ -228,7 +229,7 @@ main:
 
   # List of initialization containers belonging to the pod. Init containers are executed in order prior to containers being started.
   # See https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
-  initContainers: []
+  initContainers: [ ]
   #    - name: init-data-dir
   #      image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
   #      command: [ "/bin/sh", "-c", "mkdir -p /home/node/.n8n/" ]
@@ -238,14 +239,14 @@ main:
 
 
   service:
-    annotations: {}
+    annotations: { }
     # -- Service types allow you to specify what kind of Service you want.
     # E.g., ClusterIP, NodePort, LoadBalancer, ExternalName
     type: ClusterIP
     # -- Service port
     port: 80
 
-  resources: {}
+  resources: { }
   # We usually recommend not specifying default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -264,9 +265,9 @@ main:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
+  nodeSelector: { }
+  tolerations: [ ]
+  affinity: { }
 
 # # # # # # # # # # # # # # # #
 #
@@ -276,13 +277,13 @@ worker:
   enabled: false
 
   # additional (to main) config for worker
-  config: {}
+  config: { }
 
   # additional (to main) config for worker
-  secret: {}
+  secret: { }
 
   # Extra environmental variables, so you can reference other configmaps and secrets into n8n as env vars.
-  extraEnv: {}
+  extraEnv: { }
 
   # Define the number of jobs a worker can run in parallel by using the concurrency flag. Default is 10
   concurrency: 10
@@ -338,19 +339,19 @@ worker:
     # Specifies whether a service account should be created
     create: true
     # Annotations to add to the service account
-    annotations: {}
+    annotations: { }
     # The name of the service account to use.
     # If not set and create is true, a name is generated using the fullname template
     name: ""
 
   # Annotations to be implemented on the worker deployment
-  deploymentAnnotations: {}
+  deploymentAnnotations: { }
   # Labels to be implemented on the worker deployment
-  deploymentLabels: {}
+  deploymentLabels: { }
   # Annotations to be implemented on the worker pod
-  podAnnotations: {}
+  podAnnotations: { }
   # Labels to be implemented on the worker pod
-  podLabels: {}
+  podLabels: { }
 
   podSecurityContext:
     runAsNonRoot: true
@@ -358,7 +359,7 @@ worker:
     runAsGroup: 1000
     fsGroup: 1000
 
-  securityContext: {}
+  securityContext: { }
   # capabilities:
   #   drop:
   #   - ALL
@@ -369,7 +370,7 @@ worker:
   # here you can specify lifecycle hooks - it can be used e.g., to easily add packages to the container without building
   # your own docker image
   # see https://github.com/8gears/n8n-helm-chart/pull/30
-  lifecycle: {}
+  lifecycle: { }
 
   #  here's the sample configuration to add mysql-client to the container
   # lifecycle:
@@ -380,7 +381,7 @@ worker:
   # here you can override a command for worker container
   # it may be used to override a starting script (e.g., to resolve issues like https://github.com/n8n-io/n8n/issues/6412) or
   # run additional preparation steps (e.g., installing additional software)
-  command: []
+  command: [ ]
 
   # sample configuration that overrides starting script and solves above issue (also it runs n8n as root, so be careful):
   # command:
@@ -391,7 +392,7 @@ worker:
   #  - chmod o+rx /root; chown -R node /root/.n8n || true; chown -R node /root/.n8n; ln -s /root/.n8n /home/node; chown -R node /home/node || true; node /usr/local/bin/n8n
 
   # command args
-  commandArgs: []
+  commandArgs: [ ]
 
   # here you can override the livenessProbe for the main container
   # it may be used to increase the timeout for the livenessProbe (e.g., to resolve issues like
@@ -420,17 +421,17 @@ worker:
 
   # List of initialization containers belonging to the pod. Init containers are executed in order prior to containers being started.
   # See https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
-  initContainers: []
+  initContainers: [ ]
 
   service:
-    annotations: {}
+    annotations: { }
     # -- Service types allow you to specify what kind of Service you want.
     # E.g., ClusterIP, NodePort, LoadBalancer, ExternalName
     type: ClusterIP
     # -- Service port
     port: 80
 
-  resources: {}
+  resources: { }
   # We usually recommend not specifying default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -449,9 +450,9 @@ worker:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
+  nodeSelector: { }
+  tolerations: [ ]
+  affinity: { }
 
 # Webhook related settings
 # With .Values.scaling.webhook.enabled=true you disable Webhooks from the main process, but you enable the processing on a different Webhook instance.
@@ -460,12 +461,12 @@ worker:
 webhook:
   enabled: false
   # additional (to main) config for webhook
-  config: {}
+  config: { }
   # additional (to main) config for webhook
-  secret: {}
+  secret: { }
 
   # Extra environmental variables, so you can reference other configmaps and secrets into n8n as env vars.
-  extraEnv: {}
+  extraEnv: { }
   #   WEBHOOK_URL:
   #   value: "http://webhook.domain.tld"
 
@@ -525,19 +526,19 @@ webhook:
     # Specifies whether a service account should be created
     create: true
     # Annotations to add to the service account
-    annotations: {}
+    annotations: { }
     # The name of the service account to use.
     # If not set and create is true, a name is generated using the fullname template
     name: ""
 
   # Annotations to be implemented on the webhook deployment
-  deploymentAnnotations: {}
+  deploymentAnnotations: { }
   # Labels to be implemented on the webhook deployment
-  deploymentLabels: {}
+  deploymentLabels: { }
   # Annotations to be implemented on the webhook pod
-  podAnnotations: {}
+  podAnnotations: { }
   # Labels to be implemented on the webhook pod
-  podLabels: {}
+  podLabels: { }
 
   podSecurityContext:
     runAsNonRoot: true
@@ -545,7 +546,7 @@ webhook:
     runAsGroup: 1000
     fsGroup: 1000
 
-  securityContext: {}
+  securityContext: { }
   # capabilities:
   #   drop:
   #   - ALL
@@ -556,7 +557,7 @@ webhook:
   # here you can specify lifecycle hooks - it can be used e.g., to easily add packages to the container without building
   # your own docker image
   # see https://github.com/8gears/n8n-helm-chart/pull/30
-  lifecycle: {}
+  lifecycle: { }
 
   #  here's the sample configuration to add mysql-client to the container
   # lifecycle:
@@ -567,7 +568,7 @@ webhook:
   # here you can override a command for main container
   # it may be used to override a starting script (e.g., to resolve issues like https://github.com/n8n-io/n8n/issues/6412) or
   # run additional preparation steps (e.g., installing additional software)
-  command: []
+  command: [ ]
 
   # sample configuration that overrides starting script and solves above issue (also it runs n8n as root, so be careful):
   # command:
@@ -577,7 +578,7 @@ webhook:
   #  - -c
   #  - chmod o+rx /root; chown -R node /root/.n8n || true; chown -R node /root/.n8n; ln -s /root/.n8n /home/node; chown -R node /home/node || true; node /usr/local/bin/n8n
   # Command Arguments
-  commandArgs: []
+  commandArgs: [ ]
 
   # here you can override the livenessProbe for the main container
   # it may be used to increase the timeout for the livenessProbe (e.g., to resolve issues like
@@ -607,17 +608,17 @@ webhook:
 
   # List of initialization containers belonging to the pod. Init containers are executed in order prior to containers being started.
   # See https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
-  initContainers: []
+  initContainers: [ ]
 
   service:
-    annotations: {}
+    annotations: { }
     # -- Service types allow you to specify what kind of Service you want.
     # E.g., ClusterIP, NodePort, LoadBalancer, ExternalName
     type: ClusterIP
     # -- Service port
     port: 80
 
-  resources: {}
+  resources: { }
   # We usually recommend not specifying default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -634,9 +635,9 @@ webhook:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
+  nodeSelector: { }
+  tolerations: [ ]
+  affinity: { }
 
 #
 # User defined supplementary K8s manifests
@@ -645,7 +646,7 @@ webhook:
 #  Takes a list of Kubernetes manifests and merges each resource with a default metadata.labels map and
 #  installs the result.
 #  Use this to add any arbitrary Kubernetes manifests alongside this chart instead of kubectl and scripts.
-extraManifests: []
+extraManifests: [ ]
 #  - apiVersion: v1
 #    kind: ConfigMap
 #    metadata:
@@ -665,7 +666,7 @@ extraManifests: []
 
 # String extraManifests supports using variables directly within a string manifest.
 # Templates are rendered using the context defined in the values.yaml file, enabling dynamic and flexible content customization.
-extraTemplateManifests: []
+extraTemplateManifests: [ ]
 #  - |
 #    apiVersion: v1
 #    kind: ConfigMap
